@@ -39,8 +39,12 @@ public class SingleInstanceSupport {
 		FileChannel fileChannel = new RandomAccessFile(f, "r").getChannel();
 		ByteBuffer intBuf = ByteBuffer.allocate(3*countIntBytes);
 		intBuf.clear();
-
+		
+		// we want to read from the unlocked portion of the file
+		intBuf.position(portWrittenIntPosition);
+		fileChannel.position(portWrittenIntPosition);
 		int numRead = fileChannel.read(intBuf);
+		
 		if ( numRead < countIntBytes ) {
 			throw(new Exception("no port data in file yet"));
 		}

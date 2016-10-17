@@ -107,18 +107,21 @@ public class IOTest {
 	public static void main(String[] args) throws Exception {
 
 		if ( SingleInstanceSupport.isMasterInstance() ) {
+			System.out.println("We are the master");
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					new IOTest(args.length > 0 ? args[0] : null);
 				}
 			});
 		} else {
+			System.out.println("We are not the master");
 			int port = 0;
 			int sleepTime = 500;
-			while ( port == 0 || sleepTime < 5000) {
+			while ( port == 0 && sleepTime < 5000) {
 				try {
 					port = SingleInstanceSupport.getMasterPort();
 				} catch (Exception e) {
+					System.out.println("Sleeping "+sleepTime+"; "+e);
 					Thread.sleep(sleepTime *= 2);
 				}
 			}
